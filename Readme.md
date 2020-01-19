@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Dmitry Prokopenkov](https://up.htmlacademy.ru/javascript/19/user/937051).
-* Наставник: `Неизвестно`.
+* Наставник: [Ренат Рысаев] (https://up.htmlacademy.ru/javascript/19/user/256053).
 
 ---
 
