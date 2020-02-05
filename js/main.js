@@ -41,7 +41,7 @@ var renderAds = function (ads) {
         description: 'Это описание',
         photos: PHOTOS_LIST = [getRandomInteger(0, PHOTOS_LIST.length - 1)]
       }
-    }
+    };
     var renderPin = function (pin) {
       var pinElement = pinTemplateElement.cloneNode(true);
       var renderPointCoordinateX = (pin.location.x - 25);
@@ -56,7 +56,7 @@ var renderAds = function (ads) {
 
   }
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < ads.length; i++) {
+  for (i = 0; i < ads.length; i++) {
     fragment.appendChild(renderPin(ads[i]));
   }
   mapPinsElement.appendChild(fragment);
