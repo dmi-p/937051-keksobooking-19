@@ -1,12 +1,11 @@
 'use strict';
 
-var mockLength = 8;
-
 var getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
 var mockAdsData = function () {
+  var mockLength = 8;
   var mockArray = [];
 
   var typeOfHousing = ['palace', 'flat', 'house', 'bungalo'];
@@ -49,7 +48,8 @@ var renderPin = function (pin) {
 
   var pointCoordinateX = (pin.location.x - 25);
   var pointCoordinateY = (pin.location.y - 65);
-  pinElement.style = 'left: ' + pointCoordinateX + 'px; ' + 'top: ' + pointCoordinateY + 'px;';
+  pinElement.style.left = pointCoordinateX + 'px';
+  pinElement.style.top = pointCoordinateY + 'px';
   var pinImage = pinElement.querySelector('img');
   pinImage.src = pin.author.avatar;
   pinImage.alt = pin.offer.title;
