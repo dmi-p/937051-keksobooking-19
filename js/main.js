@@ -1,18 +1,11 @@
 'use strict';
 
-var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
-
 var getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-var mapPinsElement = map.querySelector('.map__pins');
-
 var mockAdsData = function (arrayLength) {
   var array = [];
-  array.length = arrayLength;
 
   var typeOfHousing = ['palace', 'flat', 'house', 'bungalo'];
   var checkinTime = ['12:00', '13:00', '14:00'];
@@ -21,7 +14,7 @@ var mockAdsData = function (arrayLength) {
   var photosList = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
   for (var i = 0; i < arrayLength; i++) {
-    array[i] = {
+    var currentObj = {
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png',
       },
@@ -43,6 +36,7 @@ var mockAdsData = function (arrayLength) {
         photos: photosList = [getRandomInteger(0, photosList.length - 1)]
       }
     };
+    array.push(currentObj);
   }
   return array;
 };
@@ -59,13 +53,18 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
-var renderAds = function (numberOfAds) {
-  var array = mockAdsData(numberOfAds);
+var renderAds = function (adsData) {
+  var array = mockAdsData(adsData);
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < array.length; i++) {
     fragment.appendChild(renderPin(array[i]));
   }
   mapPinsElement.appendChild(fragment);
 };
+
+var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
+var mapPinsElement = map.querySelector('.map__pins');
 
 renderAds(8);
