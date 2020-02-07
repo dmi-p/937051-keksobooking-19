@@ -1,11 +1,13 @@
 'use strict';
 
+var mockLength = 8;
+
 var getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
-var mockAdsData = function (arrayLength) {
-  var array = [];
+var mockAdsData = function () {
+  var mockArray = [];
 
   var typeOfHousing = ['palace', 'flat', 'house', 'bungalo'];
   var checkinTime = ['12:00', '13:00', '14:00'];
@@ -13,7 +15,7 @@ var mockAdsData = function (arrayLength) {
   var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var photosList = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-  for (var i = 0; i < arrayLength; i++) {
+  for (var i = 0; i < mockLength; i++) {
     var currentObj = {
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png',
@@ -36,16 +38,18 @@ var mockAdsData = function (arrayLength) {
         photos: photosList = [getRandomInteger(0, photosList.length - 1)]
       }
     };
-    array.push(currentObj);
+    mockArray.push(currentObj);
   }
-  return array;
+  return mockArray;
 };
 
 var renderPin = function (pin) {
+  var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinElement = pinTemplateElement.cloneNode(true);
-  var renderPointCoordinateX = (pin.location.x - 25);
-  var renderPointCoordinateY = (pin.location.y - 65);
-  pinElement.style = 'left: ' + renderPointCoordinateX + 'px; ' + 'top: ' + renderPointCoordinateY + 'px;';
+
+  var pointCoordinateX = (pin.location.x - 25);
+  var pointCoordinateY = (pin.location.y - 65);
+  pinElement.style = 'left: ' + pointCoordinateX + 'px; ' + 'top: ' + pointCoordinateY + 'px;';
   var pinImage = pinElement.querySelector('img');
   pinImage.src = pin.author.avatar;
   pinImage.alt = pin.offer.title;
@@ -53,18 +57,17 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
-var renderAds = function (adsData) {
-  var array = mockAdsData(adsData);
+var renderAds = function () {
+  var mapPinsElement = map.querySelector('.map__pins');
+  var adsData = mockAdsData();
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < array.length; i++) {
-    fragment.appendChild(renderPin(array[i]));
+  for (var i = 0; i < adsData.length; i++) {
+    fragment.appendChild(renderPin(adsData[i]));
   }
   mapPinsElement.appendChild(fragment);
 };
 
-var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
-var mapPinsElement = map.querySelector('.map__pins');
 
-renderAds(8);
+renderAds();
