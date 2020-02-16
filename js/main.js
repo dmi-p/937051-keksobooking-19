@@ -57,8 +57,10 @@ var renderPin = function (pin) {
   return $pin;
 };
 
+var $map = document.querySelector('.map');
+var $mapPins = $map.querySelector('.map__pins');
+
 var renderAds = function () {
-  var $mapPins = $map.querySelector('.map__pins');
   var adsData = mockAdsData();
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adsData.length; i++) {
@@ -67,7 +69,6 @@ var renderAds = function () {
   $mapPins.appendChild(fragment);
 };
 
-var $map = document.querySelector('.map');
 
 var $mapFiltersForm = document.querySelector('.map__filters');
 var $mapFiltersSelects = $mapFiltersForm.querySelectorAll('select');
@@ -79,18 +80,7 @@ var $roomNumber = $adForm.querySelector('#room_number');
 var $capacity = $adForm.querySelector('#capacity');
 
 var ENTER_KEY = 'Enter';
-
-var disableForms = function () {
-  $mapFiltersFieldset.setAttribute('disabled', 'disabled');
-  for (var i = 0; i < $mapFiltersSelects.length; i++) {
-    $mapFiltersSelects[i].setAttribute('disabled', 'disabled');
-  }
-
-  // for (i = 0; i < $adFormFieldsets.length; i++) {
-  //   $adFormFieldsets[i].setAttribute('disabled', 'disabled');
-  // }
-  $map.classList.add('map--faded');
-};
+var $submitFormButton = $adForm.querySelector('.ad-form__submit');
 
 var $adFormAddressField = $adForm.querySelector('#address');
 
@@ -106,6 +96,18 @@ var addCoordinates = function () {
   $adFormAddressField.value = leftCoorinate + ', ' + topCoordinate;
 };
 
+var disableForms = function () {
+  $mapFiltersFieldset.setAttribute('disabled', 'disabled');
+  for (var i = 0; i < $mapFiltersSelects.length; i++) {
+    $mapFiltersSelects[i].setAttribute('disabled', 'disabled');
+  }
+
+  $map.classList.add('map--faded');
+  clearPins();
+  $mapPinMain.addEventListener('mousedown', ableForms);
+  $mapPinMain.addEventListener('keydown', ableForms);
+};
+
 var ableForms = function (evt) {
   if ((evt.button === 0) || (evt.key === ENTER_KEY)) {
     $map.classList.remove('map--faded');
@@ -116,39 +118,39 @@ var ableForms = function (evt) {
     for (i = 0; i < $adFormFieldsets.length; i++) {
       $adFormFieldsets[i].removeAttribute('disabled');
     }
-    // clearAds();
     renderAds();
-    // $mapPinMain.removeEventListener('mousedown', ableForms);
+    $mapPinMain.removeEventListener('mousedown', ableForms);
+    $mapPinMain.removeEventListener('keydown', ableForms);
     addCoordinates();
     $adForm.classList.remove('ad-form--disabled');
   }
 };
 
+var submitForm = function () {
+  var guests = parseInt($capacity.value, 10);
+  var rooms = parseInt($roomNumber.value, 10);
+  $capacity.setCustomValidity('');
+  if (guests > rooms) {
+    $capacity.setCustomValidity('Количество гостей не должно превышать количество комнат');
+  }
+};
+
+var clearPins = function () {
+  var pins = $mapPins.querySelectorAll('.map__pin');
+  for (var i = 0; i < pins.length; i++) {
+    if ((pins[i].classList.contains('map__pin--main')) === false) {
+      pins[i].parentNode.removeChild(pins[i]);
+    }
+  }
+};
+
 addCoordinates();
-// disableForms();
+disableForms();
 
 $mapPinMain.addEventListener('mousedown', ableForms);
 $mapPinMain.addEventListener('keydown', ableForms);
 $mapPinMain.addEventListener('mouseup', disableForms);
+$mapPinMain.addEventListener('keyup', disableForms);
 
 
-var submitForm = function (evt) {
-  var guests = parseInt($capacity.value, 10);
-  var rooms = parseInt($roomNumber.value, 10);
-  // if (evt.target && evt.target.matches('#capacity').content('option')) {
-  //   var guests = evt.target.value;
-  //   // var rooms = evt.target.value;
-  // }
-  // if (evt.target && evt.target.matches('#room_number').content('option')) {
-  //   var rooms = evt.target.value;
-  // }
-  if (guests > rooms) {
-    $capacity.setCustomValidity('Количество гостей не должно превышать количество комнат');
-    evt.preventDefault();
-  } else {
-    return true;
-  }
-};
-
-$adForm.addEventListener('submit', submitForm);
-
+$submitFormButton.addEventListener('click', submitForm);
