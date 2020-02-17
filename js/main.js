@@ -63,9 +63,9 @@ var $mapPins = $map.querySelector('.map__pins');
 var renderAds = function () {
   var adsData = mockAdsData();
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adsData.length; i++) {
-    fragment.appendChild(renderPin(adsData[i]));
-  }
+  adsData.forEach(function ($pin) {
+    fragment.appendChild(renderPin($pin));
+  });
   $mapPins.appendChild(fragment);
 };
 
@@ -80,7 +80,7 @@ var $roomNumber = $adForm.querySelector('#room_number');
 var $capacity = $adForm.querySelector('#capacity');
 
 var ENTER_KEY = 'Enter';
-var $submitFormButton = $adForm.querySelector('.ad-form__submit');
+var $onSubmitFormButton = $adForm.querySelector('.ad-form__submit');
 
 var $adFormAddressField = $adForm.querySelector('#address');
 
@@ -96,37 +96,43 @@ var addCoordinates = function () {
   $adFormAddressField.value = leftCoorinate + ', ' + topCoordinate;
 };
 
-var disableForms = function () {
+var deactivatePage = function () {
   $mapFiltersFieldset.setAttribute('disabled', 'disabled');
-  for (var i = 0; i < $mapFiltersSelects.length; i++) {
-    $mapFiltersSelects[i].setAttribute('disabled', 'disabled');
-  }
+
+  $mapFiltersSelects.forEach(function ($select) {
+    $select.setAttribute('disabled', 'disabled');
+  });
+
+  $adFormFieldsets.forEach(function ($fieldset) {
+    $fieldset.setAttribute('disabled', 'disabled');
+  });
 
   $map.classList.add('map--faded');
+  $adForm.classList.add('ad-form--disabled');
   clearPins();
-  $mapPinMain.addEventListener('mousedown', ableForms);
-  $mapPinMain.addEventListener('keydown', ableForms);
+  $mapPinMain.addEventListener('mousedown', activatePage);
+  $mapPinMain.addEventListener('keydown', activatePage);
 };
 
-var ableForms = function (evt) {
+var activatePage = function (evt) {
   if ((evt.button === 0) || (evt.key === ENTER_KEY)) {
     $map.classList.remove('map--faded');
     $mapFiltersFieldset.removeAttribute('disabled');
-    for (var i = 0; i < $mapFiltersSelects.length; i++) {
-      $mapFiltersSelects[i].removeAttribute('disabled');
-    }
-    for (i = 0; i < $adFormFieldsets.length; i++) {
-      $adFormFieldsets[i].removeAttribute('disabled');
-    }
+    $mapFiltersSelects.forEach(function ($select) {
+      $select.removeAttribute('disabled');
+    });
+    $adFormFieldsets.forEach(function ($fieldset) {
+      $fieldset.removeAttribute('disabled');
+    });
     renderAds();
-    $mapPinMain.removeEventListener('mousedown', ableForms);
-    $mapPinMain.removeEventListener('keydown', ableForms);
+    $mapPinMain.removeEventListener('mousedown', activatePage);
+    $mapPinMain.removeEventListener('keydown', activatePage);
     addCoordinates();
     $adForm.classList.remove('ad-form--disabled');
   }
 };
 
-var submitForm = function () {
+var onSubmitForm = function () {
   var guests = parseInt($capacity.value, 10);
   var rooms = parseInt($roomNumber.value, 10);
   $capacity.setCustomValidity('');
@@ -136,21 +142,22 @@ var submitForm = function () {
 };
 
 var clearPins = function () {
-  var pins = $mapPins.querySelectorAll('.map__pin');
-  for (var i = 0; i < pins.length; i++) {
-    if ((pins[i].classList.contains('map__pin--main')) === false) {
-      pins[i].parentNode.removeChild(pins[i]);
+  var $pins = $mapPins.querySelectorAll('.map__pin');
+  $pins.forEach(function ($pin) {
+    var isContainsMainPin = $pin.classList.contains('map__pin--main');
+    if (!isContainsMainPin) {
+      $pin.parentNode.removeChild($pin);
     }
-  }
+  });
 };
 
 addCoordinates();
-disableForms();
+deactivatePage();
 
-$mapPinMain.addEventListener('mousedown', ableForms);
-$mapPinMain.addEventListener('keydown', ableForms);
-$mapPinMain.addEventListener('mouseup', disableForms);
-$mapPinMain.addEventListener('keyup', disableForms);
+$mapPinMain.addEventListener('mousedown', activatePage);
+$mapPinMain.addEventListener('keydown', activatePage);
+$mapPinMain.addEventListener('mouseup', deactivatePage);
+$mapPinMain.addEventListener('keyup', deactivatePage);
 
 
-$submitFormButton.addEventListener('click', submitForm);
+$onSubmitFormButton.addEventListener('click', onSubmitForm);
