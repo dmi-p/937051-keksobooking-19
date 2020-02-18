@@ -84,23 +84,23 @@ var $onSubmitFormButton = $adForm.querySelector('.ad-form__submit');
 
 var $adFormAddressField = $adForm.querySelector('#address');
 
-var addActiveCoordinates = function () {
+
+var setActualAddress = function (isActivePage) {
   var mainPinWidthInactive = 66;
   var mainPinHeightInactive = 66;
+  var leftCoordinate = $mapPinMain.style.left;
+  var topCoordinate = $mapPinMain.style.top;
+  var mainPinAddressX;
+  var mainPinAddressY;
 
-  var mainPinActiveAddressX = parseInt($mapPinMain.style.left, 10) + (mainPinWidthInactive / 2);
-  var mainPinActiveAddressY = parseInt($mapPinMain.style.top, 10) + mainPinHeightInactive + 20;
-
-  $adFormAddressField.value = mainPinActiveAddressX + ', ' + mainPinActiveAddressY;
-};
-
-var addInactiveCoordinates = function () {
-  var mainPinWidthInactive = 66;
-  var mainPinHeightInactive = 66;
-  var mainPinInactiveAddressX = parseInt($mapPinMain.style.left, 10) + (mainPinWidthInactive / 2);
-  var mainPinInactiveAddressY = parseInt($mapPinMain.style.top, 10) + (mainPinHeightInactive / 2);
-
-  $adFormAddressField.value = mainPinInactiveAddressX + ', ' + mainPinInactiveAddressY;
+  if (isActivePage) {
+    mainPinAddressX = parseInt(leftCoordinate, 10) + (mainPinWidthInactive / 2);
+    mainPinAddressY = parseInt(topCoordinate, 10) + mainPinHeightInactive + 20;
+  } else {
+    mainPinAddressX = parseInt(leftCoordinate, 10) + (mainPinWidthInactive / 2);
+    mainPinAddressY = parseInt(topCoordinate, 10) + (mainPinHeightInactive / 2);
+  }
+  $adFormAddressField.value = mainPinAddressX + ', ' + mainPinAddressY;
 };
 
 var deactivatePage = function () {
@@ -119,7 +119,7 @@ var deactivatePage = function () {
   clearPins();
   $mapPinMain.addEventListener('mousedown', activatePage);
   $mapPinMain.addEventListener('keydown', activatePage);
-  addInactiveCoordinates();
+  setActualAddress(false);
 };
 
 var activatePage = function (evt) {
@@ -135,7 +135,7 @@ var activatePage = function (evt) {
     renderAds();
     $mapPinMain.removeEventListener('mousedown', activatePage);
     $mapPinMain.removeEventListener('keydown', activatePage);
-    addActiveCoordinates();
+    setActualAddress(true);
     $adForm.classList.remove('ad-form--disabled');
   }
 };
@@ -159,7 +159,6 @@ var clearPins = function () {
   });
 };
 
-// addCoordinates();
 deactivatePage();
 
 $mapPinMain.addEventListener('mousedown', activatePage);
