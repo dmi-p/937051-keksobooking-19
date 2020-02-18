@@ -84,12 +84,11 @@ var $onSubmitFormButton = $adForm.querySelector('.ad-form__submit');
 
 var $adFormAddressField = $adForm.querySelector('#address');
 
-var mainPinWidth = 30;
-var mainPinHeight = 75;
-var DEFAULT_MAIN_PIN_COORDINATE_X = 570 - mainPinWidth;
-var DEFAULT_MAIN_PIN_COORDINATE_Y = 375 - mainPinHeight;
-
 var addCoordinates = function () {
+  var mainPinWidth = 30;
+  var mainPinHeight = 75;
+  var DEFAULT_MAIN_PIN_COORDINATE_X = 570 - mainPinWidth;
+  var DEFAULT_MAIN_PIN_COORDINATE_Y = 375 - mainPinHeight;
   var leftCoorinate = DEFAULT_MAIN_PIN_COORDINATE_X;
   var topCoordinate = DEFAULT_MAIN_PIN_COORDINATE_Y;
 
@@ -133,9 +132,9 @@ var activatePage = function (evt) {
 };
 
 var onSubmitForm = function () {
+  $capacity.setCustomValidity('');
   var guests = parseInt($capacity.value, 10);
   var rooms = parseInt($roomNumber.value, 10);
-  $capacity.setCustomValidity('');
   if (guests > rooms) {
     $capacity.setCustomValidity('Количество гостей не должно превышать количество комнат');
   }
