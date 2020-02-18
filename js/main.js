@@ -86,21 +86,23 @@ var $adFormAddressField = $adForm.querySelector('#address');
 
 
 var setActualAddress = function (isActivePage) {
-  var mainPinWidthInactive = 66;
-  var mainPinHeightInactive = 66;
-  var leftCoordinate = $mapPinMain.style.left;
-  var topCoordinate = $mapPinMain.style.top;
-  var mainPinAddressX;
-  var mainPinAddressY;
+  // var mainPinWidthInactive = 66;
+  // var mainPinHeightInactive = 66;
+  var mainPinWidth = parseInt($mapPinMain.offsetWidth, 10);
+  var mainPinHeight = parseInt($mapPinMain.offsetHeight, 10);
+  var leftCoordinate = parseInt($mapPinMain.style.left, 10);
+  var topCoordinate = parseInt($mapPinMain.style.top, 10);
+  var mainPinX;
+  var mainPinY;
 
   if (isActivePage) {
-    mainPinAddressX = parseInt(leftCoordinate, 10) + (mainPinWidthInactive / 2);
-    mainPinAddressY = parseInt(topCoordinate, 10) + mainPinHeightInactive + 20;
+    mainPinX = leftCoordinate + (mainPinWidth / 2);
+    mainPinY = topCoordinate + mainPinHeight + 20;
   } else {
-    mainPinAddressX = parseInt(leftCoordinate, 10) + (mainPinWidthInactive / 2);
-    mainPinAddressY = parseInt(topCoordinate, 10) + (mainPinHeightInactive / 2);
+    mainPinX = leftCoordinate + (mainPinWidth / 2);
+    mainPinY = topCoordinate + (mainPinHeight / 2);
   }
-  $adFormAddressField.value = mainPinAddressX + ', ' + mainPinAddressY;
+  $adFormAddressField.value = Math.round(mainPinX) + ', ' + Math.round(mainPinY);
 };
 
 var deactivatePage = function () {
