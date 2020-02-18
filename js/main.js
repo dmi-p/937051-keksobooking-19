@@ -84,15 +84,23 @@ var $onSubmitFormButton = $adForm.querySelector('.ad-form__submit');
 
 var $adFormAddressField = $adForm.querySelector('#address');
 
-var addCoordinates = function () {
-  var mainPinWidth = 30;
-  var mainPinHeight = 75;
-  var DEFAULT_MAIN_PIN_COORDINATE_X = 570 - mainPinWidth;
-  var DEFAULT_MAIN_PIN_COORDINATE_Y = 375 - mainPinHeight;
-  var leftCoorinate = DEFAULT_MAIN_PIN_COORDINATE_X;
-  var topCoordinate = DEFAULT_MAIN_PIN_COORDINATE_Y;
+var addActiveCoordinates = function () {
+  var mainPinWidthInactive = 66;
+  var mainPinHeightInactive = 66;
 
-  $adFormAddressField.value = leftCoorinate + ', ' + topCoordinate;
+  var mainPinActiveAddressX = parseInt($mapPinMain.style.left, 10) + (mainPinWidthInactive / 2);
+  var mainPinActiveAddressY = parseInt($mapPinMain.style.top, 10) + mainPinHeightInactive + 20;
+
+  $adFormAddressField.value = mainPinActiveAddressX + ', ' + mainPinActiveAddressY;
+};
+
+var addInactiveCoordinates = function () {
+  var mainPinWidthInactive = 66;
+  var mainPinHeightInactive = 66;
+  var mainPinInactiveAddressX = parseInt($mapPinMain.style.left, 10) + (mainPinWidthInactive / 2);
+  var mainPinInactiveAddressY = parseInt($mapPinMain.style.top, 10) + (mainPinHeightInactive / 2);
+
+  $adFormAddressField.value = mainPinInactiveAddressX + ', ' + mainPinInactiveAddressY;
 };
 
 var deactivatePage = function () {
@@ -111,6 +119,7 @@ var deactivatePage = function () {
   clearPins();
   $mapPinMain.addEventListener('mousedown', activatePage);
   $mapPinMain.addEventListener('keydown', activatePage);
+  addInactiveCoordinates();
 };
 
 var activatePage = function (evt) {
@@ -126,7 +135,7 @@ var activatePage = function (evt) {
     renderAds();
     $mapPinMain.removeEventListener('mousedown', activatePage);
     $mapPinMain.removeEventListener('keydown', activatePage);
-    addCoordinates();
+    addActiveCoordinates();
     $adForm.classList.remove('ad-form--disabled');
   }
 };
@@ -150,7 +159,7 @@ var clearPins = function () {
   });
 };
 
-addCoordinates();
+// addCoordinates();
 deactivatePage();
 
 $mapPinMain.addEventListener('mousedown', activatePage);
