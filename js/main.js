@@ -86,8 +86,6 @@ var $adFormAddressField = $adForm.querySelector('#address');
 
 
 var setActualAddress = function (isActivePage) {
-  // var mainPinWidthInactive = 66;
-  // var mainPinHeightInactive = 66;
   var mainPinWidth = parseInt($mapPinMain.offsetWidth, 10);
   var mainPinHeight = parseInt($mapPinMain.offsetHeight, 10);
   var leftCoordinate = parseInt($mapPinMain.style.left, 10);
