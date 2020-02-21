@@ -2,12 +2,10 @@
 
 (function () {
   var $adForm = document.querySelector('.ad-form');
-  var $adFormFieldsets = $adForm.querySelectorAll('fieldset');
   var $roomNumber = $adForm.querySelector('#room_number');
   var $capacity = $adForm.querySelector('#capacity');
 
   var $onSubmitFormButton = $adForm.querySelector('.ad-form__submit');
-  var $adFormAddressField = $adForm.querySelector('#address');
 
   var onSubmitForm = function () {
     $capacity.setCustomValidity('');
@@ -19,11 +17,4 @@
   };
 
   $onSubmitFormButton.addEventListener('click', onSubmitForm);
-
-  window.form = {
-    $adForm: $adForm,
-    $fieldsets: $adFormFieldsets,
-    $addressField: $adFormAddressField
-  };
-
 })();

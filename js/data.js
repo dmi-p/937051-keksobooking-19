@@ -1,10 +1,6 @@
 'use strict';
 
-(function () {
-  var getRandomInteger = function (min, max) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
-  };
-
+(function (getRandomInteger) {
   var mockAdsData = function () {
     var mockLength = 8;
     var mockArray = [];
@@ -43,7 +39,6 @@
     return mockArray;
   };
   window.data = {
-    mocks: mockAdsData(),
-    getRandomInteger: getRandomInteger()
+    mockAdsData: mockAdsData
   };
-})();
+})(window.utils.getRandomInteger);

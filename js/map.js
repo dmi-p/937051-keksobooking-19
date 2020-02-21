@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function (mockAdsData) {
   var $mapFiltersForm = document.querySelector('.map__filters');
   var $mapFiltersSelects = $mapFiltersForm.querySelectorAll('select');
   var $mapFiltersFieldset = $mapFiltersForm.querySelector('fieldset');
@@ -8,6 +8,9 @@
   var $mapPinMain = $map.querySelector('.map__pin--main');
   var $mapPins = $map.querySelector('.map__pins');
   var ENTER_KEY = 'Enter';
+  var $adForm = document.querySelector('.ad-form');
+  var $adFormFieldsets = $adForm.querySelectorAll('fieldset');
+  var $adFormAddressField = $adForm.querySelector('#address');
 
   var renderPin = function (pin) {
     var $pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -35,7 +38,7 @@
   };
 
   var renderAds = function () {
-    var adsData = window.data.mocks;
+    var adsData = mockAdsData();
     var fragment = document.createDocumentFragment();
     adsData.forEach(function ($pin) {
       fragment.appendChild(renderPin($pin));
@@ -50,12 +53,12 @@
       $select.setAttribute('disabled', 'disabled');
     });
 
-    window.form.$fieldsets.forEach(function ($fieldset) {
+    $adFormFieldsets.forEach(function ($fieldset) {
       $fieldset.setAttribute('disabled', 'disabled');
     });
 
     $map.classList.add('map--faded');
-    window.form.$adForm.classList.add('ad-form--disabled');
+    $adForm.classList.add('ad-form--disabled');
     clearPins();
     $mapPinMain.addEventListener('mousedown', activatePage);
     $mapPinMain.addEventListener('keydown', activatePage);
@@ -69,14 +72,14 @@
       $mapFiltersSelects.forEach(function ($select) {
         $select.removeAttribute('disabled');
       });
-      window.form.$fieldsets.forEach(function ($fieldset) {
+      $adFormFieldsets.forEach(function ($fieldset) {
         $fieldset.removeAttribute('disabled');
       });
       renderAds();
       $mapPinMain.removeEventListener('mousedown', activatePage);
       $mapPinMain.removeEventListener('keydown', activatePage);
       setActualAddress(true);
-      window.form.$adForm.classList.remove('ad-form--disabled');
+      $adForm.classList.remove('ad-form--disabled');
     }
   };
 
@@ -95,7 +98,7 @@
       mainPinX = leftCoordinate + (mainPinWidth / 2);
       mainPinY = topCoordinate + (mainPinHeight / 2);
     }
-    window.form.$addressField.value = Math.round(mainPinX) + ', ' + Math.round(mainPinY);
+    $adFormAddressField.value = Math.round(mainPinX) + ', ' + Math.round(mainPinY);
   };
 
   deactivatePage();
@@ -106,9 +109,9 @@
   $mapPinMain.addEventListener('keyup', deactivatePage);
 
   window.map = {
-    renderPin: renderPin(),
-    renderAds: renderAds(),
+    renderPin: renderPin,
+    renderAds: renderAds,
 
   };
 
-})();
+})(window.data.mockAdsData);
