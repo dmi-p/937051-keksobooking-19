@@ -1,6 +1,6 @@
 'use strict';
 
-(function (getRandomInteger) {
+(function (getRandomInteger, getNewRandomArray) {
   var mockAdsData = function () {
     var mockLength = 8;
     var mockArray = [];
@@ -29,9 +29,10 @@
           guests: getRandomInteger(0, 3),
           checkin: checkinTime[getRandomInteger(0, checkinTime.length - 1)],
           checkout: checkoutTime[getRandomInteger(0, checkoutTime.length - 1)],
-          features: featuresList[getRandomInteger(0, featuresList.length - 1)],
+          features: getNewRandomArray(featuresList),
           description: 'Это описание',
-          photos: photosList = [getRandomInteger(0, photosList.length - 1)]
+          // photos: photosList = [getRandomInteger(0, photosList.length - 1)]
+          photos: getNewRandomArray(photosList),
         }
       };
       mockArray.push(currentObj);
@@ -41,4 +42,4 @@
   window.data = {
     mockAdsData: mockAdsData
   };
-})(window.utils.getRandomInteger);
+})(window.utils.getRandomInteger, window.utils.getNewRandomArray);
