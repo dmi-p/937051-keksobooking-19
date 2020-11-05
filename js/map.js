@@ -9,10 +9,11 @@
   var $mapPinMain = $map.querySelector('.map__pin--main');
   var $mapPins = $map.querySelector('.map__pins');
   var ENTER_KEY = 'Enter';
+  var ESC_KEY = 'Escape';
   var $adForm = document.querySelector('.ad-form');
   var $adFormFieldsets = $adForm.querySelectorAll('fieldset');
   var $adFormAddressField = $adForm.querySelector('#address');
-
+  var openedCard = null;
 
   var renderPin = function (pin) {
     var $pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -25,6 +26,51 @@
     var $pinImage = $pin.querySelector('img');
     $pinImage.src = pin.author.avatar;
     $pinImage.alt = pin.offer.title;
+    var fragment = document.createDocumentFragment();
+    var card = renderCard(pin);
+    var cardCloseButton = card.querySelector('.popup__close');
+
+    var isCardOpen = function (currenttCard) {
+      if (currenttCard === null) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    var closeCurrentCard = function (currentCard) {
+      currentCard.removeEventListener('keydown', cardEscPressHandler);
+      currentCard.classList.add('hidden');
+      openedCard = null;
+    };
+
+
+    var openCard = function () {
+      if (isCardOpen(openedCard)) {
+        closeCurrentCard(openedCard);
+      }
+      card.classList.remove('hidden');
+      card.addEventListener('keydown', cardEscPressHandler);
+      cardCloseButton.focus();
+      openedCard = card;
+    };
+
+    var closeCard = function () {
+      card.removeEventListener('keydown', cardEscPressHandler);
+      card.classList.add('hidden');
+      openedCard = null;
+    };
+
+    var cardEscPressHandler = function (evt) {
+      if (evt.key === ESC_KEY) {
+        closeCard();
+      }
+    };
+    $pin.addEventListener('click', openCard);
+    cardCloseButton.addEventListener('click', closeCard);
+
+    fragment.appendChild(card);
+    $map.insertBefore(fragment, $mapFiltersContainer);
 
     return $pin;
   };
@@ -99,6 +145,8 @@
     $card.style.left = cardCoordinateX + 'px';
     $card.style.top = cardCoordinateY + 'px';
 
+    $card.classList.add('hidden');
+
     return $card;
   };
 
@@ -127,12 +175,6 @@
       fragment.appendChild(renderPin($pin));
     });
     $mapPins.appendChild(fragment);
-
-    fragment = document.createDocumentFragment();
-    adsData.forEach(function ($card) {
-      fragment.appendChild(renderCard($card));
-    });
-    $map.insertBefore(fragment, $mapFiltersContainer);
   };
 
   var deactivatePage = function () {
@@ -197,6 +239,7 @@
   $mapPinMain.addEventListener('keydown', activatePage);
   $mapPinMain.addEventListener('mouseup', deactivatePage);
   $mapPinMain.addEventListener('keyup', deactivatePage);
+
 
   window.map = {
     renderPin: renderPin,
